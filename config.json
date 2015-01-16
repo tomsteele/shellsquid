@@ -1,0 +1,22 @@
+{
+    "proxy": {
+        "ssl": {
+            "enabled": true,
+            "listener": ":443",
+            "key": "key.pem",
+            "cert": "cert.pem"
+        },
+        "http": {
+            "enabled": true,
+            "listener": ":80"
+        }
+    },
+
+    "admin": {
+        "listener": ":1337",
+        "key": "key.pem",
+        "cert": "cert.pem"
+    },
+    "jwt_key": "secret",
+    "bolt_db_file": "squid.db"
+}

@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-xs-12">
+        <a class="btn btn-primary pull-right" style="margin-left: 10px" type="button" href="/#/records/new">Add Record</a>
+        <input type="text" class="form-control pull-right searchbox" placeholder="Search" ng-model="vm.recordFilter">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="one-pix"></th>
+                    <th>FQDN</th>
+                    <th class="one-pix">Clients</th>
+                    <th>Owner</th>
+                    <th class="one-pix">Blacklisted</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="record in vm.records | filter: vm.recordFilter | orderBy: 'record.fqdn'">
+                    <td class="one-pix"><a ng-href="/#/records/{{record.id}}">View / Edit</a>
+                    </td>
+                    <td>{{ record.fqdn }}</td>
+                    <td class="one-pix">{{ record.clients.length }}</td>
+                    <td>{{ record.owner.email }}</td>
+                    <td class="one-pix"><span class="glyphicon glyphicon-ok" ng-show="record.blacklist" aria-hidden="true"></span>
+                    </td>
+                    <td>{{ record.created_at }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

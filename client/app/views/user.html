@@ -1,0 +1,65 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h3>{{vm.user.email}}</h3>
+    </div>
+    </div <br />
+    <div class="row">
+        <div class="col-xs-4 pull-right">
+            <form class="form-horization">
+                <fieldset>
+                    <legend>Change Password</legend>
+                    <div class="form-group">
+                        <label class="control-label" for="password">Password</label>
+                        <div class="controls">
+                            <input id="password" name="password" type="password" placeholder="password" ng-model="vm.password" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="password">Confirm</label>
+                        <div class="controls">
+                            <input id="password" name="password" type="password" placeholder="password" ng-model="vm.confirmPassword" class="form-control">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary pull-right" ng-click="vm.changePassword()">Submit</button>
+            </form>
+        </div>
+        <div class="col-xs-7">
+            <legend>Records</legend>
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="one-pix"></th>
+                        <th>FQDN</th>
+                        <th class="one-pix">Clients</th>
+                        <th class="one-pix">Blacklisted</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="record in vm.records | orderBy: 'record.fqdn'">
+                        <td class="one-pix"><a ng-href="/#/records/{{record.id}}">View / Edit</a>
+                        </td>
+                        <td>{{ record.fqdn }}</td>
+                        <td class="one-pix">{{ record.clients.length }}</td>
+                        <td class="one-pix"><span class="glyphicon glyphicon-ok" ng-show="record.blacklist" aria-hidden="true"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="col-xs-4 pull-right">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    User Deletion
+                </div>
+                <div class="panel-body">
+                    <p>Deleted users can not be recovered.</p>
+                    <button class="btn btn-danger" ng-click="vm.deleteUser()">Delete User</button>
+                </div>
+            </div>
+        </div>
+    </div>
