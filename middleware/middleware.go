@@ -16,7 +16,7 @@ func SetUserContext(server *app.App) func(w http.ResponseWriter, req *http.Reque
 		token := context.Get(req, "user").(*jwt.Token)
 		id := token.Claims["id"].(string)
 		user := &models.User{ID: id}
-		if ok, err := server.DB.Exists(user); err == nil || !ok {
+		if ok, err := server.DB.Exists(user); err != nil || !ok {
 			server.Render.JSON(w, http.StatusUnauthorized, nil)
 			return
 		}
