@@ -17,15 +17,6 @@
 
                 <!-- Text input-->
                 <div class="form-group">
-                    <label class="control-label" for="external_ip">External IPs</label>
-                    <div class="controls">
-                        <input id="external_ip" name="external_ip" type="text" placeholder="8.8.8.8,4.4.4.4" class="form-control" nd-model="vm.record.external_ip">
-                        <p class="help-block">Comma separated list of external addresses for payload mapping. This would be the NAT address if you were attacking a workstation on an internal network. This can be blank. Prefer FQDN over this.</p>
-                    </div>
-                </div>
-
-                <!-- Text input-->
-                <div class="form-group">
                     <label class="control-label" for="host">Handler Host</label>
                     <div class="controls">
                         <input id="host" name="host" type="text" placeholder="127.0.0.1" class="form-control" required="" ng-model="vm.record.handler_host">
