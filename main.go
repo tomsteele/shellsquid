@@ -52,7 +52,9 @@ func main() {
 	if config.Proxy.SSL.Enabled {
 		sslMux := http.NewServeMux()
 		sslMux.HandleFunc("/", ProxyHandler(app, false))
-		sslProxy := negroni.Classic()
+		sslRecovery := negroni.NewRecovery()
+		sslRecovery.PrintStack = false
+		sslProxy := negroni.New(sslRecovery)
 		sslProxy.UseHandler(sslMux)
 		go func() {
 			log.Fatal(http.ListenAndServeTLS(config.Proxy.SSL.Listener, config.Proxy.SSL.Cert, config.Proxy.SSL.Key, sslProxy))
@@ -62,7 +64,9 @@ func main() {
 	if config.Proxy.HTTP.Enabled {
 		httpMux := http.NewServeMux()
 		httpMux.HandleFunc("/", ProxyHandler(app, false))
-		httpProxy := negroni.Classic()
+		httpRecovery := negroni.NewRecovery()
+		httpRecovery.PrintStack = false
+		httpProxy := negroni.New(httpRecovery)
 		httpProxy.UseHandler(httpMux)
 		go func() {
 			log.Fatal(http.ListenAndServe(config.Proxy.HTTP.Listener, httpProxy))
@@ -103,7 +107,11 @@ func main() {
 		negroni.Wrap(userRouter),
 	))
 
-	server := negroni.Classic()
+	server := negroni.New(
+		negroni.NewLogger(),
+		negroni.NewStatic("client/dist"),
+		negroni.NewRecovery(),
+	)
 	server.UseHandler(r)
 	log.Fatal(http.ListenAndServeTLS(config.Admin.Listener, config.Admin.Cert, config.Admin.Key, server))
 }
