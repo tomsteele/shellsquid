@@ -1,10 +1,11 @@
-package main
+package config
 
 import (
 	"encoding/json"
 	"io/ioutil"
 )
 
+// Config holds all the required information for server.
 type Config struct {
 	Proxy struct {
 		SSL struct {
@@ -27,8 +28,8 @@ type Config struct {
 	BoltDBFile string `json:"bolt_db_file"`
 }
 
-// ParseConfig parses json from the file provided by filename into a Config struct.
-func ParseConfig(filename string) (*Config, error) {
+// New parses JSON from the file provided by filename into a Config struct.
+func New(filename string) (*Config, error) {
 	config := &Config{}
 	file, err := ioutil.ReadFile(filename)
 	if err != nil {

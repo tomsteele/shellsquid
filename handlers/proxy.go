@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"crypto/tls"
@@ -6,22 +6,25 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"strconv"
+
+	"github.com/tomsteele/shellsquid/app"
+	"github.com/tomsteele/shellsquid/models"
 )
 
-func ProxyHandler(app *App, isHttps bool) func(w http.ResponseWriter, req *http.Request) {
+func Proxy(server *app.App, isHttps bool) func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
-		record, err := FindRecordByFQDN(app.DB, req.Host)
+		record, err := models.FindRecordByFQDN(server.DB, req.Host)
 		if err != nil || record.ID == "" {
-			app.Render.Data(w, http.StatusNotFound, nil)
+			server.Render.Data(w, http.StatusNotFound, nil)
 			return
 		}
 		if record.Blacklist {
-			app.Render.Data(w, http.StatusNotFound, nil)
+			server.Render.Data(w, http.StatusNotFound, nil)
 			return
 		}
 		u, err := url.Parse(record.HandlerProtocol + "://" + record.HandlerHost + ":" + strconv.Itoa(record.HandlerPort))
 		if err != nil {
-			app.Render.Data(w, http.StatusNotFound, nil)
+			server.Render.Data(w, http.StatusNotFound, nil)
 			return
 		}
 		proxy := httputil.NewSingleHostReverseProxy(u)
