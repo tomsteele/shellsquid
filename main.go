@@ -19,7 +19,7 @@ import (
 )
 
 func main() {
-	conf, err := config.New("./conf.json")
+	conf, err := config.New("./config.json")
 	if err != nil {
 		log.Fatalf("Error parsing confuration file: %s", err.Error())
 	}
@@ -99,7 +99,7 @@ func main() {
 	api.HandleFunc("/api/records/{id}", handlers.DeleteRecord(serverApp)).Methods("DELETE")
 	api.HandleFunc("/api/records/{id}", handlers.UpdateRecord(serverApp)).Methods("PUT")
 
-	r.PathPrefix("/api/records").PathPrefix("/api/users").Handler(negroni.New(
+	r.PathPrefix("/api").Handler(negroni.New(
 		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
 		negroni.HandlerFunc(middleware.SetUserContext(serverApp)),
 		negroni.Wrap(api),
