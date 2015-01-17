@@ -1,0 +1,66 @@
+{
+	"ImportPath": "github.com/tomsteele/shellsquid",
+	"GoVersion": "go1.4",
+	"Deps": [
+		{
+			"ImportPath": "code.google.com/p/go-uuid/uuid",
+			"Comment": "null-15",
+			"Rev": "35bc42037350f0078e3c974c6ea690f1926603ab"
+		},
+		{
+			"ImportPath": "github.com/auth0/go-jwt-middleware",
+			"Rev": "4fb819167f530a087591cbb0b9c287b0d53a7627"
+		},
+		{
+			"ImportPath": "github.com/boltdb/bolt",
+			"Comment": "v1.0-13-g15a58b0",
+			"Rev": "15a58b04ae5336fd58e2dab6f289459941fbaed6"
+		},
+		{
+			"ImportPath": "github.com/codegangsta/negroni",
+			"Comment": "v0.1-55-g1dd3ab0",
+			"Rev": "1dd3ab0ff59e13f5b73dcbf70703710aebe50d2f"
+		},
+		{
+			"ImportPath": "github.com/dgrijalva/jwt-go",
+			"Comment": "v2.2.0-13-ga3e2f13",
+			"Rev": "a3e2f13bb7a4cfef6824fab97be5a7df9b86eff2"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "e444e69cbd2e2e3e0749a2f3c717cec491552bbf"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/copier",
+			"Rev": "6e12de4f75d99030d1d4f40d78025562b068d26d"
+		},
+		{
+			"ImportPath": "github.com/jmcvetta/randutil",
+			"Rev": "8c8db8477594beda2db3cb1e840a0e3e60ff2739"
+		},
+		{
+			"ImportPath": "github.com/mholt/binding",
+			"Rev": "6c082304f300fc70793cb0be18af0fdd4acd2b75"
+		},
+		{
+			"ImportPath": "github.com/nlf/boltons",
+			"Rev": "209920e3eef351495228a55b56187dca10b1888f"
+		},
+		{
+			"ImportPath": "github.com/unrolled/render",
+			"Rev": "bdfac4a8df10cc9dc03ee14ba2f655137fd70378"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Rev": "4ed45ec682102c643324fae5dff8dab085b6c300"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Rev": "4ed45ec682102c643324fae5dff8dab085b6c300"
+		}
+	]
+}
