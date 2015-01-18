@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 
+	"github.com/auth0/go-jwt-middleware"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/context"
 	"github.com/tomsteele/shellsquid/app"
@@ -27,4 +28,14 @@ func SetUserContext(server *app.App) func(w http.ResponseWriter, req *http.Reque
 		context.Set(req, "user", user)
 		next(w, req)
 	}
+}
+
+// JWTAuth parses a JWT token from an authorization header.
+func JWTAuth(server *app.App) func(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	j := jwtmiddleware.New(jwtmiddleware.Options{
+		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+			return server.JWTSecret, nil
+		},
+	})
+	return j.HandlerWithNext
 }

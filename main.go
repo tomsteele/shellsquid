@@ -4,9 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/auth0/go-jwt-middleware"
 	"github.com/codegangsta/negroni"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/jmcvetta/randutil"
 	"github.com/nlf/boltons"
@@ -78,12 +76,6 @@ func main() {
 		}()
 	}
 
-	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
-		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-			return serverApp.JWTSecret, nil
-		},
-	})
-
 	r := mux.NewRouter()
 	api := mux.NewRouter()
 	r.HandleFunc("/api/token", handlers.UserToken(serverApp)).Methods("POST")
@@ -100,7 +92,7 @@ func main() {
 	api.HandleFunc("/api/records/{id}", handlers.UpdateRecord(serverApp)).Methods("PUT")
 
 	r.PathPrefix("/api").Handler(negroni.New(
-		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.HandlerFunc(middleware.JWTAuth(serverApp)),
 		negroni.HandlerFunc(middleware.SetUserContext(serverApp)),
 		negroni.Wrap(api),
 	))
