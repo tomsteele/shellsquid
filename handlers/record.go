@@ -32,14 +32,15 @@ func CreateRecord(server *app.App) func(w http.ResponseWriter, req *http.Request
 			server.Render.JSON(w, http.StatusBadRequest, map[string]string{"error": "fqdn must be unique across the serverlication"})
 			return
 		}
-		record := &models.Record{}
+		now := time.Now().Unix()
+		record := &models.Record{
+			CreatedAt: now,
+			UpdatedAt: now,
+		}
 		record.Owner.Email = user.Email
 		record.Owner.ID = user.ID
-		now := time.Now().Unix()
-		record.CreatedAt = now
-		record.UpdatedAt = now
-		record.Clients = []string{}
 		copier.Copy(record, recordReq)
+
 		if err := server.DB.Save(record); err != nil {
 			server.Render.JSON(w, http.StatusInternalServerError, map[string]string{"error": "there was an error saving the record to the database"})
 			log.Println(err)

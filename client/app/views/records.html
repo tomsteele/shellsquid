@@ -7,7 +7,6 @@
                 <tr>
                     <th class="one-pix"></th>
                     <th>FQDN</th>
-                    <th class="one-pix">Clients</th>
                     <th>Owner</th>
                     <th class="one-pix">Blacklisted</th>
                     <th>Created At</th>
@@ -18,7 +17,6 @@
                     <td class="one-pix"><a ng-href="/#/records/{{record.id}}">View / Edit</a>
                     </td>
                     <td>{{ record.fqdn }}</td>
-                    <td class="one-pix">{{ record.clients.length }}</td>
                     <td>{{ record.owner.email }}</td>
                     <td class="one-pix"><span class="glyphicon glyphicon-ok" ng-show="record.blacklist" aria-hidden="true"></span>
                     </td>

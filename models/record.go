@@ -14,14 +14,13 @@ type Record struct {
 		ID    string `json:"id"`
 		Email string `json:"email"`
 	} `json:"owner"`
-	FQDN            string   `json:"fqdn"`
-	HandlerHost     string   `json:"handler_host"`
-	HandlerPort     int      `json:"handler_port"`
-	HandlerProtocol string   `json:"handler_protocol"`
-	UpdatedAt       int64    `json:"updated_at"`
-	CreatedAt       int64    `json:"created_at"`
-	Clients         []string `json:"clients"`
-	Blacklist       bool     `json:"blacklist"`
+	FQDN            string `json:"fqdn"`
+	HandlerHost     string `json:"handler_host"`
+	HandlerPort     int    `json:"handler_port"`
+	HandlerProtocol string `json:"handler_protocol"`
+	UpdatedAt       int64  `json:"updated_at"`
+	CreatedAt       int64  `json:"created_at"`
+	Blacklist       bool   `json:"blacklist"`
 }
 
 // FindRecordsForOwner returns a list of all records for a given owner by their id.
@@ -96,12 +95,11 @@ func (r *RecordRequest) Validate(req *http.Request, errs binding.Errors) binding
 
 // UpdateRecordRequest is used to perform JSON binding when updating a record.
 type UpdateRecordRequest struct {
-	FQDN            string   `json:"fqdn"`
-	HandlerHost     string   `json:"handler_host"`
-	HandlerPort     int      `json:"handler_port"`
-	HandlerProtocol string   `json:"handler_protocol"`
-	Blacklist       bool     `json:"blacklist"`
-	Clients         []string `json:"clients"`
+	FQDN            string `json:"fqdn"`
+	HandlerHost     string `json:"handler_host"`
+	HandlerPort     int    `json:"handler_port"`
+	HandlerProtocol string `json:"handler_protocol"`
+	Blacklist       bool   `json:"blacklist"`
 	Owner           struct {
 		ID    string `json:"id"`
 		Email string `json:"email"`

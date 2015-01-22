@@ -27,4 +27,7 @@ angular.module('clientApp')
                     vm.error = 'Invalid username or password';
                 });
         };
+        vm.dismiss = function () {
+            vm.error = '';
+        };
     });

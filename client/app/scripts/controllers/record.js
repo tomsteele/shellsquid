@@ -33,10 +33,6 @@ angular.module('clientApp')
             }
             vm.record.$update(function () {});
         };
-        vm.clearClientsFromRecord = function () {
-            vm.record.clients = [];
-            vm.record.$update(function () {});
-        };
         vm.deleteRecord = function () {
             vm.record.$delete(function () {
                 $location.path('/records');

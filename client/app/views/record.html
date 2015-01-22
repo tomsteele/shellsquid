@@ -54,38 +54,18 @@
         </form>
     </div>
     <div class="col-xs-5 pull-right">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Clients
-                    </div>
-                    <div class="panel-body">
-                        <p>The following IP addresses have initiated sessions:</p>
-                        <ul class="list-unstyled">
-                            <li ng-repeat="client in vm.record.clients">{{ client }}</li>
-                        </ul>
-                        <button class="btn btn-warning" ng-click="vm.clearClientsFromRecord()">Clear clients</button>
-                    </div>
-                </div>
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                Blacklist & Delete
             </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        Blacklist & Delete
-                    </div>
-                    <div class="panel-body">
-                        <p>Enabling blacklist will result in payload's being sent 404's for all requests.</p>
-                        <button ng-if="!vm.record.blacklist" class="btn btn-warning" ng-click="vm.blacklistRecord()">Blacklist</button>
-                        <button ng-if="vm.record.blacklist" class="btn btn-primary" ng-click="vm.unblacklistRecord()">Unblacklist</button>
-                        <br />
-                        <br />
-                        <p>Deletion is permanent.</p>
-                        <button class="btn btn-danger" ng-click="vm.deleteRecord()">Delete</button>
-                    </div>
-                </div>
+            <div class="panel-body">
+                <p>Enabling blacklist will result in payload's being sent 404's for all requests.</p>
+                <button ng-if="!vm.record.blacklist" class="btn btn-warning" ng-click="vm.blacklistRecord()">Blacklist</button>
+                <button ng-if="vm.record.blacklist" class="btn btn-primary" ng-click="vm.unblacklistRecord()">Unblacklist</button>
+                <br />
+                <br />
+                <p>Deletion is permanent.</p>
+                <button class="btn btn-danger" ng-click="vm.deleteRecord()">Delete</button>
             </div>
         </div>
     </div>

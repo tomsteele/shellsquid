@@ -31,7 +31,6 @@
                     <tr>
                         <th class="one-pix"></th>
                         <th>FQDN</th>
-                        <th class="one-pix">Clients</th>
                         <th class="one-pix">Blacklisted</th>
                     </tr>
                 </thead>
@@ -40,7 +39,6 @@
                         <td class="one-pix"><a ng-href="/#/records/{{record.id}}">View / Edit</a>
                         </td>
                         <td>{{ record.fqdn }}</td>
-                        <td class="one-pix">{{ record.clients.length }}</td>
                         <td class="one-pix"><span class="glyphicon glyphicon-ok" ng-show="record.blacklist" aria-hidden="true"></span>
                         </td>
                     </tr>
