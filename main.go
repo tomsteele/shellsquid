@@ -54,7 +54,7 @@ func main() {
 
 	if conf.Proxy.SSL.Enabled {
 		sslMux := http.NewServeMux()
-		sslMux.HandleFunc("/", handlers.Proxy(serverApp, false))
+		sslMux.HandleFunc("/", handlers.Proxy(serverApp, true))
 		sslRecovery := negroni.NewRecovery()
 		sslRecovery.PrintStack = false
 		sslProxy := negroni.New(sslRecovery)
