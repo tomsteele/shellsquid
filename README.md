@@ -36,7 +36,7 @@ The server is written in Go and uses boltdb. Configuration is done in `config.js
 # Install godep
 $ go get github.com/tools/godep
 # Run the server, all dependencies are managed and stored in the using godep in the Godeps directory
-$ sudo -E godep run main.go
+$ sudo -E godep go run main.go
 ```
 
 #### Client
