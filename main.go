@@ -21,6 +21,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error parsing confuration file: %s", err.Error())
 	}
+	if conf.JWTKey == "" {
+		log.Fatalf("jwt_secret in config.json is not set, please set this to a random value")
+	}
+
 	db, err := boltons.Open(conf.BoltDBFile, 0600, nil)
 	if err != nil {
 		log.Fatal("Error opening db: %s", err.Error())
