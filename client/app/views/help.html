@@ -34,11 +34,15 @@ None, shellsquid is written in Go and uses boltdb.
     "key": "key.pem",
     "cert": "cert.pem"
   },
-  "jwt_key": "insert secret key here",
+  "jwt_key": "<strong>insert secret key here</strong>",
   "bolt_db_file": "squid.db"
   }
-  </pre>
-  You will need to generate a certificate and key files separately. Do whatever is best for your needs and environment.
+</pre>
+<pre>
+You will need to generate a certificate and key files separately. For example, a self signed certificate can be generated using the the following syntax and should be stored in the root of the project directory:
+
+openssl req -x509 -newkey rsa:2048 -nodes -keyout <strong>key.pem</strong> -out <strong>cert.pem</strong> -days XXX
+</pre>
 </p>
 
 
