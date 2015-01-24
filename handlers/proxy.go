@@ -6,14 +6,20 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"strconv"
+	"strings"
 
 	"github.com/tomsteele/shellsquid/app"
 	"github.com/tomsteele/shellsquid/models"
 )
 
+func hostname(host string) string {
+	parts := strings.SplitN(host, ":", 2)
+	return parts[0]
+}
+
 func Proxy(server *app.App, isHttps bool) func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
-		record, err := models.FindRecordByFQDN(server.DB, req.Host)
+		record, err := models.FindRecordByFQDN(server.DB, hostname(req.Host))
 		if err != nil || record.ID == "" {
 			server.Render.Data(w, http.StatusNotFound, nil)
 			return
