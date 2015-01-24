@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-    .controller('NewUserCtrl', function ($location, User) {
+    .controller('NewUserCtrl', function ($location, User, MessengerService) {
         var vm = this;
         vm.email = '';
         vm.password = '';
@@ -18,7 +18,7 @@ angular.module('clientApp')
             user.password = vm.password;
             User.save(user, function () {
                 $location.path('/users');
-            });
+            }, MessengerService.error);
         };
 
     });

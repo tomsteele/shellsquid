@@ -8,12 +8,12 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-    .controller('UsersCtrl', function (User) {
+    .controller('UsersCtrl', function (User, MessengerService) {
         var vm = this;
         vm.users = [];
 
         function init() {
-            vm.users = User.query({});
+            vm.users = User.query({}, function () {}, MessengerService.error);
         }
         init();
     });

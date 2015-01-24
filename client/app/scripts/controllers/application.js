@@ -8,7 +8,11 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-    .controller('ApplicationCtrl', function (AuthService) {
+    .controller('ApplicationCtrl', function ($rootScope, AuthService) {
         var vm = this;
         vm.isAuthenticated = AuthService.isAuthenticated;
+        vm.dismiss = function () {
+            $rootScope.successMessage = '';
+            $rootScope.errorMessage = '';
+        };
     });

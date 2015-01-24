@@ -8,14 +8,12 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-    .controller('UserCtrl', function ($http, $routeParams, $location, User, Record) {
+    .controller('UserCtrl', function ($http, $routeParams, $location, User, Record, MessengerService) {
         var vm = this;
         vm.user = {};
         vm.password = '';
         vm.confirmPassword = '';
         vm.records = [];
-        vm.error = '';
-        vm.success = '';
 
         vm.changePassword = function () {
             if (vm.password !== vm.confirmPassword) {
@@ -25,12 +23,10 @@ angular.module('clientApp')
             $http.post('/api/users/' + $routeParams.id, {
                 password: vm.password
             }).success(function () {
-                vm.success = 'Password updated';
-                vm.error = '';
+                MessengerService.success('password updated');
                 clean();
-            }).error(function () {
-                vm.error = 'Error updating password';
-                vm.success = '';
+            }).error(function (data) {
+                MessengerService.error(data);
                 clean();
             });
 
@@ -56,7 +52,7 @@ angular.module('clientApp')
                         if (record.owner.id === vm.user.id) {
                             return record;
                         }
-                    });
+                    }, MessengerService.error);
                 });
             });
         }

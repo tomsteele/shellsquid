@@ -43,6 +43,23 @@
     </nav>
 
     <div class="container">
+        <div class="row" ng-show="errorMessage">
+            <div class="col-xs-12">
+                <div class="alert alert-danger">
+                    <button type="button" class="close" ng-click="app.dismiss()">&times;</button>
+                    <strong>Error:</strong> {{ errorMessage }}
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-show="successMessage">
+            <div class="col-xs-12">
+                <div class="alert alert-success">
+                    <button type="button" class="close" ng-click="app.dismiss()">&times;</button>
+                    <strong>Success:</strong> {{ successMessage }}
+                </div>
+            </div>
+        </div>
+
         <div ng-view=""></div>
     </div>
 
@@ -80,6 +97,7 @@
     <script src="scripts/controllers/application.js"></script>
     <script src="scripts/services/auth.js"></script>
     <script src="scripts/controllers/logout.js"></script>
+    <script src="scripts/services/messenger.js"></script>
     <!-- endbuild -->
 </body>
 

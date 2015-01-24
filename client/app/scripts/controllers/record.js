@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-    .controller('RecordCtrl', function ($location, $routeParams, Record, User) {
+    .controller('RecordCtrl', function ($location, $routeParams, Record, User, MessengerService) {
         var vm = this;
         vm.record = {};
         vm.users = [];
@@ -31,7 +31,9 @@ angular.module('clientApp')
                     break;
                 }
             }
-            vm.record.$update(function () {});
+            vm.record.$update(function () {
+                MessengerService.success('record updated');
+            }, MessengerService.error);
         };
         vm.deleteRecord = function () {
             vm.record.$delete(function () {
@@ -40,11 +42,17 @@ angular.module('clientApp')
         };
         vm.blacklistRecord = function () {
             vm.record.blacklist = true;
-            vm.record.$update(function () {});
+            vm.record.$update(function () {}, function (data) {
+                vm.record.blacklist = false;
+                MessengerService.error(data);
+            });
         };
         vm.unblacklistRecord = function () {
             vm.record.blacklist = false;
-            vm.record.$update(function () {});
+            vm.record.$update(function () {}, function (data) {
+                vm.record.blacklist = true;
+                MessengerService.error(data);
+            });
         };
 
         function init() {

@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-    .controller('NewRecordCtrl', function ($location, Record) {
+    .controller('NewRecordCtrl', function ($location, Record, MessengerService) {
         var vm = this;
         vm.error = null;
         vm.fqdn = '';
@@ -23,7 +23,7 @@ angular.module('clientApp')
             record.handler_protocol = vm.handler_protocol;
             Record.save(record, function (data) {
                 return $location.path('/records/' + data.id);
-            });
+            }, MessengerService.error);
         };
 
     });
