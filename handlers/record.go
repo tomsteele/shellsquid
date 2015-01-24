@@ -29,7 +29,7 @@ func CreateRecord(server *app.App) func(w http.ResponseWriter, req *http.Request
 			return
 		}
 		if existing.ID != "" {
-			server.Render.JSON(w, http.StatusBadRequest, map[string]string{"error": "fqdn must be unique across the serverlication"})
+			server.Render.JSON(w, http.StatusBadRequest, map[string]string{"error": "fqdn must be unique across the application"})
 			return
 		}
 		now := time.Now().Unix()

@@ -25,7 +25,7 @@ func CreateUser(server *app.App) func(w http.ResponseWriter, req *http.Request) 
 			return
 		}
 		if existing.ID != "" {
-			server.Render.JSON(w, http.StatusBadRequest, map[string]string{"error": "user email must be unique across the serverlication"})
+			server.Render.JSON(w, http.StatusBadRequest, map[string]string{"error": "user email must be unique across the application"})
 			return
 		}
 		user, err := models.NewUser(userReq.Email, []byte(userReq.Password))
@@ -95,7 +95,7 @@ func DeleteUser(server *app.App) func(w http.ResponseWriter, req *http.Request) 
 			return
 		}
 		if err := server.DB.Delete(user); err != nil {
-			server.Render.JSON(w, http.StatusInternalServerError, map[string]string{"error": "there was an error deleting  the user from the database"})
+			server.Render.JSON(w, http.StatusInternalServerError, map[string]string{"error": "there was an error deleting the user from the database"})
 			log.Println(err)
 			return
 		}
