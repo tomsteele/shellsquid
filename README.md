@@ -31,10 +31,12 @@ Authentication and authorization is performed using JSON Web Tokens ("JWT"). The
 ### Development
 
 #### Server
-The server is written in Go and uses boltdb. Configuration is done in `config.json`. Start the server:
+The server is written in Go and uses boltdb. Configuration is done in `config.json`. This project uses godep for dependency management. To start the server:
 ```
-$ go build
-$ ./shellsquid
+# Install godep
+$ go get github.com/tools/godep
+# Run the server, all dependencies are managed and stored in the using godep in the Godeps directory
+$ sudo -E godep run main.go
 ```
 
 #### Client
