@@ -17,6 +17,6 @@
         "key": "key.pem",
         "cert": "cert.pem"
     },
-    "jwt_key": "S3cr3t",
+    "jwt_key": "",
     "bolt_db_file": "squid.db"
 }
