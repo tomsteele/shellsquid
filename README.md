@@ -69,10 +69,11 @@ shellsquid is similar; the HTTP based reverse shell fires and connects back to s
 All of the these FQDNs would route based on their subdomain components. shellsquid would then parse the HTTP Host header and route the connection to the actual MSF multi-handler designated by the "show advanced" syntax within MetaSploit. The following images provide a sample configuration:
 
 ***Setting `LHOST` and `LPORT` to use the FQDN of your record and port of the proxy***
-![](https://github.com/tomsteele/shellsquid/blob/master/client/app/images/msf_advanced.png)
+![](https://github.com/tomsteele/shellsquid/blob/master/client/app/images/msf_fqdn.png)
 
 ***Setting the Backend (i.e., shoveled/proxied) listener to the actual `LHOST` and `LPORT` established in shellsquid***
-![](https://github.com/tomsteele/shellsquid/blob/master/client/app/images/msf_fqdn.png)
+![](https://github.com/tomsteele/shellsquid/blob/master/client/app/images/msf_advanced.png)
+
 
 ### Security
 Authentication and authorization is performed using JSON Web Tokens ("JWT"). The administrative portion of the application is configured by default to listen on a separate port and interface than the HTTP and HTTPS proxy handler. Access to the administrative interface is done using a username and password. Currently, all users have the same permissions and can change the passwords of other users. This is fully intentional, everyone is an admin. There didn't seem like there was much to be gained by having a finegrained permissions model.
