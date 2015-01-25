@@ -44,6 +44,8 @@ $ openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 
 ```
 
 ### Starting the server
+Starting the server is as easy as running the compiled binary. If started for the first time, an initial user `admin@localhost` will be created with a random password, this will be output to stdout.
+
 `$ ./shellsquid`
 
 ### Metasploit Configuration
@@ -52,6 +54,8 @@ This version of shellsquid does not require any special handlers! There are stil
   * set `LPORT` to the listening port of the proxy. For example, if it's an HTTPS payload and your proxy is configured to listen on 443, then set it to 443.
   * use the advanced options of `ReverseListenerBindPort` and `ReverseListenerBindAddress` to set the actual interface and port for the handler to use.
   * run like normal.
+
+***You can not set your `ReverseListenerBindAddress` to `localhost` or `127.0.0.1` because of a bug in Metasploit.***
 
 #### MSF Configuration Example
 It is easier to think of shellsquid as a reverse HTTP proxy, such as nginx. For example, an HTTP request is sent to nginx based on a fqdn (e.g., foo.bar.com) along with the respective HTTP Host header. The nginx proxy then routes the request to the appropriate application content.
