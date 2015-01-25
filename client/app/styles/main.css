@@ -2,6 +2,9 @@ body {
     padding-top: 80px;
     padding-bottom: 30px;
 }
+img {
+    max-width: 100%;
+}
 .one-pix {
     width: 1px;
     white-space: nowrap;
@@ -48,17 +51,14 @@ body {
     width: 970px;
     max-width: none !important;
 }
-
 .container .navbar-header,
 .container .navbar-collapse {
     margin-right: 0;
     margin-left: 0;
 }
-
 .navbar-header {
     float: left;
 }
-
 .navbar-collapse {
     display: block !important;
     height: auto !important;
@@ -75,7 +75,6 @@ body {
 .navbar-brand {
     margin-left: -15px;
 }
-
 .navbar-nav {
     float: left;
     margin: 0;
@@ -86,7 +85,6 @@ body {
 .navbar-nav > li > a {
     padding: 15px;
 }
-
 .navbar-nav.navbar-right {
     float: right;
 }

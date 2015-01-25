@@ -13,7 +13,8 @@ angular
         'ngResource',
         'ngRoute',
         'ngSanitize',
-        'angular-jwt'
+        'angular-jwt',
+        'hc.marked'
     ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -100,6 +101,15 @@ angular
 
         $httpProvider.interceptors.push('jwtInterceptor');
     })
+    .config(['markedProvider', function (markedProvider) {
+        markedProvider.setOptions({
+            gfm: true,
+            tables: true,
+            hightlight: function (code) {
+                return hljs.highlightAuto(code).value;
+            }
+        });
+    }])
     .run(function ($rootScope, $location, AuthService) {
         $rootScope.$on('$routeChangeStart', function (evt, next) {
             if (next.data && next.data.auth) {
