@@ -8,10 +8,10 @@
  * Controller of the clientApp
  */
 angular.module('clientApp')
-  .controller('HelpCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+    .controller('HelpCtrl', function ($scope) {
+        $scope.awesomeThings = [
+            'HTML5 Boilerplate',
+            'AngularJS',
+            'Karma'
+        ];
+    });
