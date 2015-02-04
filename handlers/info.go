@@ -29,8 +29,8 @@ func Info(server *app.App, version string, conf *config.Config) func(w http.Resp
 		info.Version = version
 		info.Proxy.SSL.Enabled = conf.Proxy.SSL.Enabled
 		info.Proxy.SSL.Listener = conf.Proxy.SSL.Listener
-		info.Proxy.HTTP.Enabled = conf.Proxy.SSL.Enabled
-		info.Proxy.HTTP.Listener = conf.Proxy.SSL.Listener
+		info.Proxy.HTTP.Enabled = conf.Proxy.HTTP.Enabled
+		info.Proxy.HTTP.Listener = conf.Proxy.HTTP.Listener
 		server.Render.JSON(w, http.StatusOK, info)
 	}
 }
