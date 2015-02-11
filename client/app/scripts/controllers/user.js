@@ -20,7 +20,7 @@ angular.module('clientApp')
                 vm.error = 'Passwords must match';
                 return;
             }
-            $http.post('/api/users/' + $routeParams.id, {
+            $http.put('/api/users/' + $routeParams.id, {
                 password: vm.password
             }).success(function () {
                 MessengerService.success('password updated');
