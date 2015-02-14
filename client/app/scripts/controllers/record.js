@@ -17,7 +17,7 @@ angular.module('clientApp')
         vm.findOwner = function () {
             for (var i = 0; i < vm.users.length; i++) {
                 var user = vm.users[i];
-                if (user._id === vm.record.owner._id) {
+                if (user.id === vm.record.owner.id) {
                     return user;
                 }
             }
