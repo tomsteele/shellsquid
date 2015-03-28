@@ -88,3 +88,6 @@ img {
 .navbar-nav.navbar-right {
     float: right;
 }
+[ng\:cloak], [ng-cloak], .ng-cloak {
+    display: none !important;
+}
