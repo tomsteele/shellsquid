@@ -7,7 +7,7 @@ cd ..
 for OS in "linux" "darwin" "freebsd"; do
     for ARCH in "amd64"; do
         GOOS=$OS  CGO_ENABLED=0 GOARCH=$ARCH go build
-        FOLDER=shellsquid2.0.0$OS-$ARCH
+        FOLDER=shellsquid2.0.2$OS-$ARCH
         ARCHIVE=$FOLDER.tar.gz
         mkdir -p $FOLDER/client/dist
         cp LICENSE $FOLDER
