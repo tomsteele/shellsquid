@@ -72,7 +72,7 @@ shellsquid is similar; the HTTP based reverse shell fires and connects back to s
 All of the these FQDNs would route based on their subdomain components. shellsquid would then parse the HTTP Host header and route the connection to the actual MSF multi-handler designated by the "show advanced" syntax within MetaSploit. The following images provide a sample configuration:
 
 ***Setting `LHOST` and `LPORT` to use the FQDN of your record and port of the proxy***
-![](https://github.com/tomsteele/shellsquid-ui/blob/master/client/app/images/msf_fqdn.png)
+![](https://github.com/tomsteele/shellsquid-ui/blob/master/app/images/msf_fqdn.png)
 
 ***Setting the Backend (i.e., shoveled/proxied) listener to the actual `LHOST` and `LPORT` established in shellsquid***
 ![](https://github.com/tomsteele/shellsquid-ui/blob/master/app/images/msf_advanced.png)
