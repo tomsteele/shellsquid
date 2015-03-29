@@ -1,4 +1,5 @@
 .idea
 *.pem
 *.db
+static
 shellsquid
