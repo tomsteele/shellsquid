@@ -1,18 +1,13 @@
 #!/bin/sh
 
-cd client
-grunt build
-cd ..
-
 for OS in "linux" "darwin" "freebsd"; do
     for ARCH in "amd64"; do
         GOOS=$OS  CGO_ENABLED=0 GOARCH=$ARCH godep go build
         FOLDER=shellsquid2.1.0$OS-$ARCH
         ARCHIVE=$FOLDER.tar.gz
-        mkdir -p $FOLDER/client/dist
+        mkdir -p $FOLDER/static
         cp LICENSE $FOLDER
         cp config.json $FOLDER
-        cp -R client/dist/* $FOLDER/client/dist
         if [ $OS = "windows" ] ; then
             cp shellsquid.exe $FOLDER
             rm shellsquid.exe
