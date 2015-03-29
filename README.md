@@ -7,6 +7,9 @@ A common way of configuring payload routing is to register a single domain with 
 
 ### Download
 Binary packages for every supported operating system are availble [here](https://github.com/tomsteele/shellsquid/releases/latest).
+
+This package does not provide a web client. The recommended client is [shellsquid-ui](https://github.com/tomsteele/shellsquid-ui).
+
 ### Dependencies
 None, shellsquid is written in [Go](https://golang.org) and uses [boltdb](https://github.com/boltdb/bolt).
 
@@ -69,10 +72,10 @@ shellsquid is similar; the HTTP based reverse shell fires and connects back to s
 All of the these FQDNs would route based on their subdomain components. shellsquid would then parse the HTTP Host header and route the connection to the actual MSF multi-handler designated by the "show advanced" syntax within MetaSploit. The following images provide a sample configuration:
 
 ***Setting `LHOST` and `LPORT` to use the FQDN of your record and port of the proxy***
-![](https://github.com/tomsteele/shellsquid/blob/master/client/app/images/msf_fqdn.png)
+![](https://github.com/tomsteele/shellsquid-ui/blob/master/client/app/images/msf_fqdn.png)
 
 ***Setting the Backend (i.e., shoveled/proxied) listener to the actual `LHOST` and `LPORT` established in shellsquid***
-![](https://github.com/tomsteele/shellsquid/blob/master/client/app/images/msf_advanced.png)
+![](https://github.com/tomsteele/shellsquid-ui/blob/master/app/images/msf_advanced.png)
 
 
 ### Security
@@ -91,22 +94,4 @@ $ sudo -E godep go run main.go
 ```
 
 #### Client
-Client code lives in the `/client` directory. To run it you need to install node.js, bower, and grunt-cli. Once you have node.js installed:
-
-```
-$ npm install -g grunt-cli
-$ npm install -g bower
-```
-
-From the client directory, install the required npm and bower modules
-
-```
-$ bower i
-$ npm i
-```
-
-You can start a server with live reload for the client using grunt. The grunt configuration will send all API requests to the server at https://127.0.0.1:1337.
-
-```
-$ grunt serve
-```
+Shellsquid is bring your own client. The recommended client is [shellsquid-ui](https://github.com/tomsteele/shellsquid-ui).
