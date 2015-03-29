@@ -106,7 +106,7 @@ func main() {
 
 	server := negroni.New(
 		negroni.NewLogger(),
-		negroni.NewStatic(http.Dir("client/dist")),
+		negroni.NewStatic(http.Dir("static")),
 		negroni.NewRecovery(),
 	)
 
