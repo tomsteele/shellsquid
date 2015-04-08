@@ -4,6 +4,10 @@ Negroni is an idiomatic approach to web middleware in Go. It is tiny, non-intrus
 
 If you like the idea of [Martini](http://github.com/go-martini/martini), but you think it contains too much magic, then Negroni is a great fit.
 
+
+Language Translations:
+* [Português Brasileiro (pt_BR)](translations/README_pt_br.md)
+
 ## Getting Started
 
 After installing Go and setting up your [GOPATH](http://golang.org/doc/code.html#GOPATH), create your first `.go` file. We'll call it `server.go`.
@@ -125,17 +129,14 @@ If you have a route group of routes that need specific middleware to be executed
 
 ~~~ go
 router := mux.NewRouter()
-apiRoutes := mux.NewRouter()
-// add api routes here
-// eg apiRoutes.HandleFunc("/api", apiHandler)
-// eg apiRoutes.HandleFunc("/api/users", userHandler)
-// eg apiRoutes.HandleFunc("/api/products", productHandler)
+adminRoutes := mux.NewRouter()
+// add admin routes here
 
-// Create a new negroni for the api middleware
-router.PathPrefix("/api").Handler( negroni.New(
+// Create a new negroni for the admin middleware
+router.Handle("/admin", negroni.New(
   Middleware1,
   Middleware2,
-  negroni.Wrap(apiRoutes),
+  negroni.Wrap(adminRoutes),
 ))
 ~~~
 
@@ -162,6 +163,7 @@ Here is a current list of Negroni compatible middlware. Feel free to put up a PR
 | [cors](https://github.com/rs/cors) | [Olivier Poitrey](https://github.com/rs) | [Cross Origin Resource Sharing](http://www.w3.org/TR/cors/) (CORS) support |
 | [xrequestid](https://github.com/pilu/xrequestid) | [Andrea Franz](https://github.com/pilu) | Middleware that assigns a random X-Request-Id header to each request |
 | [VanGoH](https://github.com/auroratechnologies/vangoh) | [Taylor Wrobel](https://github.com/twrobel3) | Configurable [AWS-Style](http://docs.aws.amazon.com/AmazonS3/latest/dev/RESTAuthentication.html) HMAC authentication middleware |
+| [stats](https://github.com/thoas/stats) | [Florent Messa](https://github.com/thoas) | Store information about your web application (response time, etc.) |
 
 ## Examples
 [Alexander Rødseth](https://github.com/xyproto) created [mooseware](https://github.com/xyproto/mooseware), a skeleton for writing a Negroni middleware handler.

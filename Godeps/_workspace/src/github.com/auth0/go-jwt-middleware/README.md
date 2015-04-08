@@ -104,8 +104,47 @@ type Options struct {
   // A boolean indicating if the credentials are required or not
   // Default value: false
   CredentialsOptional bool
+  // A function that extracts the token from the request
+  // Default: FromAuthHeader (i.e., from Authorization header as bearer token)
+  Extractor TokenExtractor
+  // Debug flag turns on debugging output
+  // Default: false  
+  Debug bool
 }
 ````
+
+### Token Extraction
+
+The default value for the `Extractor` option is the `FromAuthHeader`
+function which assumes that the JWT will be provided as a bearer token
+in an `Authorization` header, i.e.,
+
+```
+Authorization: bearer {token}
+```
+
+To extract the token from a query string parameter, you can use the
+`FromParameter` function, e.g.,
+
+```go
+jwtmiddleware.New(jwtmiddleware.Options{
+  Extractor: jwtmiddleware.FromParameter("auth_code"),
+})
+```
+
+In this case, the `FromParameter` function will look for a JWT in the
+`auth_code` query parameter.
+
+Or, if you want to allow both, you can use the `FromFirst` function to
+try and extract the token first in one way and then in one or more
+other ways, e.g.,
+
+```go
+jwtmiddleware.New(jwtmiddleware.Options{
+	Extractor: jwtmiddleware.FromFirst(jwtmiddleware.FromAuthHeader,
+	                                   jwtmiddleware.FromParameter("auth_code")),
+})
+```
 
 ## Examples
 
@@ -114,10 +153,6 @@ You can check out working examples in the [examples folder](https://github.com/a
 ## Issue Reporting
 
 If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
-
-## License
-
-MIT
 
 ## What is Auth0?
 
@@ -130,7 +165,19 @@ Auth0 helps you to:
 * Analytics of how, when and where users are logging in.
 * Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
 
-## Create a free account in Auth0
+## Create a free Auth0 Account
 
 1. Go to [Auth0](https://auth0.com) and click Sign Up.
 2. Use Google, GitHub or Microsoft Account to login.
+
+## Issue Reporting
+
+If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+
+## Author
+
+[Auth0](auth0.com)
+
+## License
+
+This project is licensed under the MIT license. See the [LICENSE](LICENSE.txt) file for more info.
