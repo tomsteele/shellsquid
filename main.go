@@ -56,6 +56,7 @@ func main() {
 		DB:        db,
 		JWTSecret: []byte(conf.JWTKey),
 		Render:    render.New(),
+		Config:    conf,
 	}
 
 	if conf.Proxy.SSL.Enabled {
@@ -96,7 +97,7 @@ func main() {
 	api.HandleFunc("/api/records/{id}", handlers.ShowRecord(serverApp)).Methods("GET")
 	api.HandleFunc("/api/records/{id}", handlers.DeleteRecord(serverApp)).Methods("DELETE")
 	api.HandleFunc("/api/records/{id}", handlers.UpdateRecord(serverApp)).Methods("PUT")
-	api.HandleFunc("/api/info", handlers.Info(serverApp, version, conf)).Methods("GET")
+	api.HandleFunc("/api/info", handlers.Info(serverApp, version)).Methods("GET")
 
 	r.PathPrefix("/api").Handler(negroni.New(
 		negroni.HandlerFunc(middleware.JWTAuth(serverApp)),

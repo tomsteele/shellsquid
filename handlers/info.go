@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/tomsteele/shellsquid/app"
-	"github.com/tomsteele/shellsquid/config"
 )
 
 // Infos struct holds version and proxy info.
@@ -23,14 +22,14 @@ type Infos struct {
 }
 
 // Info returns some useful information for the client.
-func Info(server *app.App, version string, conf *config.Config) func(w http.ResponseWriter, req *http.Request) {
+func Info(server *app.App, version string) func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		info := &Infos{}
 		info.Version = version
-		info.Proxy.SSL.Enabled = conf.Proxy.SSL.Enabled
-		info.Proxy.SSL.Listener = conf.Proxy.SSL.Listener
-		info.Proxy.HTTP.Enabled = conf.Proxy.HTTP.Enabled
-		info.Proxy.HTTP.Listener = conf.Proxy.HTTP.Listener
+		info.Proxy.SSL.Enabled = server.Config.Proxy.SSL.Enabled
+		info.Proxy.SSL.Listener = server.Config.Proxy.SSL.Listener
+		info.Proxy.HTTP.Enabled = server.Config.Proxy.HTTP.Enabled
+		info.Proxy.HTTP.Listener = server.Config.Proxy.HTTP.Listener
 		server.Render.JSON(w, http.StatusOK, info)
 	}
 }

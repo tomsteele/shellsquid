@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/context"
@@ -13,6 +14,10 @@ import (
 	"github.com/tomsteele/shellsquid/models"
 )
 
+func isSameAsListener(listener string, req *models.RecordRequest) bool {
+	return listener == req.HandlerHost+":"+strconv.Itoa(req.HandlerPort)
+}
+
 // CreateRecord handles a request to create a new record.
 func CreateRecord(server *app.App) func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
@@ -20,6 +25,14 @@ func CreateRecord(server *app.App) func(w http.ResponseWriter, req *http.Request
 		user = context.Get(req, "user").(*models.User)
 		recordReq := &models.RecordRequest{}
 		if err := binding.Bind(req, recordReq); err.Handle(w) {
+			return
+		}
+		if isSameAsListener(server.Config.Proxy.HTTP.Listener, recordReq) {
+			server.Render.JSON(w, http.StatusBadRequest, map[string]string{"error": "Handler Host and Handler Port must not be the same as HTTP Listener"})
+			return
+		}
+		if isSameAsListener(server.Config.Proxy.SSL.Listener, recordReq) {
+			server.Render.JSON(w, http.StatusBadRequest, map[string]string{"error": "Handler Host and Handler Port must not be the same as SSL Listener"})
 			return
 		}
 		existing, err := models.FindRecordByFQDN(server.DB, recordReq.FQDN)

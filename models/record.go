@@ -2,6 +2,7 @@ package models
 
 import (
 	"net/http"
+	"regexp"
 
 	"github.com/mholt/binding"
 	"github.com/nlf/boltons"
@@ -72,7 +73,7 @@ func (r *RecordRequest) Validate(req *http.Request, errs binding.Errors) binding
 			Message:    "fqdn must be a valid hostname",
 		})
 	}
-	if r.HandlerHost == "" {
+	if ok, err := regexp.Match(`^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$`, []byte(r.HandlerHost)); !ok || err != nil || r.HandlerHost == "" {
 		errs = append(errs, binding.Error{
 			FieldNames: []string{"handler_host"},
 			Message:    "handler_host must be a valid IP address",
