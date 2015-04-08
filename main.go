@@ -16,7 +16,7 @@ import (
 	"github.com/unrolled/render"
 )
 
-const version = "2.1.0"
+const version = "2.1.1"
 
 func main() {
 	conf, err := config.New("./config.json")
