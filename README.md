@@ -1,9 +1,11 @@
 shellsquid
 ==========
 
-At its core, shellsquid is just a dynamic and configurable HTTP(S) reverse proxy. The intended purpose is to enable teams to share a single Internet facing interface and port when handling multiple reverse payloads. The original version of shellsquid used customized payloads to determine routing, and was overly complex. This version uses hostnames and is much more straight forward.
+At its core, shellsquid is a database driven HTTP(S) and DNS reverse proxy. The intended purpose is to enable teams to share a single Internet facing interface and port when handling multiple reverse payloads. The original version of shellsquid used customized payloads to determine routing, and was overly complex. This version uses hostnames and is much more straight forward.
 
-A common way of configuring payload routing is to register a single domain with a wildcard DNS record, and then use subdomains to route payloads.
+For HTTP(S), a common way of configuring payload routing is to register a single domain with a wildcard DNS record, and then use subdomains to route payloads.
+
+For DNS payloads, a domain can be registered and a authoritative DNS server setup. You can then use multiple subdomains to route to different internal handlers. [dnscat2](https://github.com/iagox86/dnscat2) was the payload used for testing, consult it's documentation for more information on configuring authoritative DNS.
 
 ### Download
 Binary packages for every supported operating system are availble [here](https://github.com/tomsteele/shellsquid/releases/latest).
@@ -19,6 +21,10 @@ Configuration is done via a JSON file in `config.json`. The following values are
 ```
 {
     "proxy": {
+        "dns": {
+            "enabled": true,
+            "listener": ":53"
+        },
         "ssl": {
             "enabled": true,
             "listener": ":443",
