@@ -150,10 +150,10 @@ func (r *UpdateRecordRequest) Validate(req *http.Request, errs binding.Errors) b
 			Message:    "handler_port must be a valid TCP port",
 		})
 	}
-	if r.HandlerProtocol != "http" && r.HandlerProtocol != "https" {
+	if r.HandlerProtocol != "http" && r.HandlerProtocol != "https" && r.HandlerProtocol != "dns" {
 		errs = append(errs, binding.Error{
-			FieldNames: []string{"fqdn"},
-			Message:    "handler_protocol must be either http or https",
+			FieldNames: []string{"handler_protocol"},
+			Message:    "handler_protocol must be either http, https, or dns",
 		})
 	}
 	if r.Owner.ID == "" {
