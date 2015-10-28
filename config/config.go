@@ -8,6 +8,10 @@ import (
 // Config holds all the required information for server.
 type Config struct {
 	Proxy struct {
+		DNS struct {
+			Enabled  bool   `json:"enabled"`
+			Listener string `json:"listener"`
+		} `json:"dns"`
 		SSL struct {
 			Enabled  bool   `json:"enabled"`
 			Listener string `json:"listener"`

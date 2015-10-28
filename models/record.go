@@ -54,6 +54,22 @@ func FindRecordByFQDN(db *boltons.DB, fqdn string) (*Record, error) {
 	return &record, nil
 }
 
+// FindRecordBySubOfFQDN is used for DNS requests and tries to find
+// the record whos FQDN matches name.
+func FindRecordBySubOfFQDN(db *boltons.DB, name string) (*Record, error) {
+	record := Record{}
+	records := []Record{}
+	if err := db.All(&records); err != nil {
+		return &record, err
+	}
+	for _, r := range records {
+		if ok, err := regexp.MatchString(".*\\."+regexp.QuoteMeta(r.FQDN)+"\\.", name); ok && err == nil {
+			return &r, nil
+		}
+	}
+	return &record, nil
+}
+
 // RecordRequest is used for JSON binding during a request to create a new record.
 type RecordRequest struct {
 	FQDN            string `json:"fqdn"`
@@ -62,10 +78,12 @@ type RecordRequest struct {
 	HandlerProtocol string `json:"handler_protocol"`
 }
 
+// FieldMap implements binding.FieldMap
 func (r *RecordRequest) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{}
 }
 
+// Validate validates a request payload for a new record.
 func (r *RecordRequest) Validate(req *http.Request, errs binding.Errors) binding.Errors {
 	if r.FQDN == "" {
 		errs = append(errs, binding.Error{
@@ -85,10 +103,10 @@ func (r *RecordRequest) Validate(req *http.Request, errs binding.Errors) binding
 			Message:    "handler_port must be a valid TCP port",
 		})
 	}
-	if r.HandlerProtocol != "http" && r.HandlerProtocol != "https" {
+	if r.HandlerProtocol != "http" && r.HandlerProtocol != "https" && r.HandlerProtocol != "dns" {
 		errs = append(errs, binding.Error{
-			FieldNames: []string{"fqdn"},
-			Message:    "handler_protocol must be either http or https",
+			FieldNames: []string{"handler_protocol"},
+			Message:    "handler_protocol must be either http, https, or dns",
 		})
 	}
 	return errs
@@ -107,10 +125,12 @@ type UpdateRecordRequest struct {
 	} `json:"owner"`
 }
 
+// FieldMap implements binding.FieldMap
 func (r *UpdateRecordRequest) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{}
 }
 
+// Validate validates a request payload to update a record.
 func (r *UpdateRecordRequest) Validate(req *http.Request, errs binding.Errors) binding.Errors {
 	if r.FQDN == "" {
 		errs = append(errs, binding.Error{

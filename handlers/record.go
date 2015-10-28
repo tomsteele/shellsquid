@@ -52,11 +52,13 @@ func CreateRecord(server *app.App) func(w http.ResponseWriter, req *http.Request
 		}
 		record.Owner.Email = user.Email
 		record.Owner.ID = user.ID
-		copier.Copy(record, recordReq)
+		if err := copier.Copy(record, recordReq); err != nil {
+			server.Render.JSON(w, http.StatusInternalServerError, map[string]string{"error": "there was an error saving the record to the database"})
+			return
+		}
 
 		if err := server.DB.Save(record); err != nil {
 			server.Render.JSON(w, http.StatusInternalServerError, map[string]string{"error": "there was an error saving the record to the database"})
-			log.Println(err)
 			return
 		}
 
@@ -71,7 +73,6 @@ func IndexRecord(server *app.App) func(w http.ResponseWriter, req *http.Request)
 		records := []models.Record{}
 		if err := server.DB.All(&records); err != nil {
 			server.Render.JSON(w, http.StatusInternalServerError, map[string]string{"error": "there was an error getting records from the database"})
-			log.Println(err)
 			return
 		}
 		server.Render.JSON(w, http.StatusOK, records)
@@ -158,7 +159,10 @@ func UpdateRecord(server *app.App) func(w http.ResponseWriter, req *http.Request
 			}
 		}
 
-		copier.Copy(record, updateReq)
+		if err := copier.Copy(record, updateReq); err != nil {
+			server.Render.JSON(w, http.StatusInternalServerError, map[string]string{"error": "there was an error updating the record"})
+			return
+		}
 		record.UpdatedAt = time.Now().Unix()
 		if err := server.DB.Save(record); err != nil {
 			server.Render.JSON(w, http.StatusInternalServerError, map[string]string{"error": "there was an error updating the record"})
