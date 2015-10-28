@@ -7,6 +7,7 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/jmcvetta/randutil"
+	"github.com/miekg/dns"
 	"github.com/nlf/boltons"
 	"github.com/tomsteele/shellsquid/app"
 	"github.com/tomsteele/shellsquid/config"
@@ -83,6 +84,21 @@ func main() {
 		}()
 	}
 
+	if conf.Proxy.DNS.Enabled {
+		tcpDNServer := &dns.Server{Addr: conf.Proxy.DNS.Listener, Net: "udp"}
+		udpDNServer := &dns.Server{Addr: conf.Proxy.DNS.Listener, Net: "tcp"}
+
+		dns.HandleFunc(".", handlers.ProxyDNS(serverApp))
+
+		go func() {
+			log.Fatal(tcpDNServer.ListenAndServe())
+		}()
+
+		go func() {
+			log.Fatal(udpDNServer.ListenAndServe())
+		}()
+	}
+
 	r := mux.NewRouter()
 	api := mux.NewRouter()
 	r.HandleFunc("/api/token", handlers.UserToken(serverApp)).Methods("POST")
@@ -113,4 +129,5 @@ func main() {
 
 	server.UseHandler(r)
 	log.Fatal(http.ListenAndServeTLS(conf.Admin.Listener, conf.Admin.Cert, conf.Admin.Key, server))
+
 }

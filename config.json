@@ -1,5 +1,9 @@
 {
     "proxy": {
+        "dns": {
+          "enabled": true,
+          "listener": ":53"
+        },
         "ssl": {
             "enabled": true,
             "listener": ":443",
