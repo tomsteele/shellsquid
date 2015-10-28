@@ -10,6 +10,10 @@ import (
 type Infos struct {
 	Version string `json:"version"`
 	Proxy   struct {
+		DNS struct {
+			Enabled  bool   `json:"enabled"`
+			Listener string `json:"listener"`
+		} `json:"dns"`
 		SSL struct {
 			Enabled  bool   `json:"enabled"`
 			Listener string `json:"listener"`
@@ -30,6 +34,8 @@ func Info(server *app.App, version string) func(w http.ResponseWriter, req *http
 		info.Proxy.SSL.Listener = server.Config.Proxy.SSL.Listener
 		info.Proxy.HTTP.Enabled = server.Config.Proxy.HTTP.Enabled
 		info.Proxy.HTTP.Listener = server.Config.Proxy.HTTP.Listener
+		info.Proxy.DNS.Enabled = server.Config.Proxy.DNS.Enabled
+		info.Proxy.DNS.Listener = server.Config.Proxy.DNS.Listener
 		server.Render.JSON(w, http.StatusOK, info)
 	}
 }
