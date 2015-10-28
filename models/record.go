@@ -62,7 +62,7 @@ func FindRecordBySubOfFQDN(db *boltons.DB, name string) (*Record, error) {
 		return &record, err
 	}
 	for _, r := range records {
-		if ok, err := regexp.Match(".+\\."+name, []byte(r.FQDN)); ok && err != nil {
+		if ok, err := regexp.MatchString(".*\\."+regexp.QuoteMeta(r.FQDN)+"\\.", name); ok && err == nil {
 			return &r, nil
 		}
 	}
