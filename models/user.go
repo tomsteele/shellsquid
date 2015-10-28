@@ -55,7 +55,7 @@ type UserRequest struct {
 	Password string `json:"password"`
 }
 
-func (u *UserRequest) FieldMap() binding.FieldMap {
+func (u *UserRequest) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{}
 }
 
@@ -81,7 +81,7 @@ type UserTokenRequest struct {
 	Password string `json:"password"`
 }
 
-func (u *UserTokenRequest) FieldMap() binding.FieldMap {
+func (u *UserTokenRequest) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{}
 }
 
@@ -106,7 +106,7 @@ type UserUpdateRequest struct {
 	Password string `json:"password"`
 }
 
-func (u *UserUpdateRequest) FieldMap() binding.FieldMap {
+func (u *UserUpdateRequest) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{}
 }
 

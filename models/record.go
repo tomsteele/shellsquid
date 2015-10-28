@@ -62,7 +62,7 @@ type RecordRequest struct {
 	HandlerProtocol string `json:"handler_protocol"`
 }
 
-func (r *RecordRequest) FieldMap() binding.FieldMap {
+func (r *RecordRequest) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{}
 }
 
@@ -107,7 +107,7 @@ type UpdateRecordRequest struct {
 	} `json:"owner"`
 }
 
-func (r *UpdateRecordRequest) FieldMap() binding.FieldMap {
+func (r *UpdateRecordRequest) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{}
 }
 

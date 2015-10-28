@@ -87,6 +87,11 @@ are not thread safe. To work with data in multiple goroutines you must start
 a transaction for each one or use locking to ensure only one goroutine accesses
 a transaction at a time. Creating transaction from the `DB` is thread safe.
 
+Read-only transactions and read-write transactions should not depend on one
+another and generally shouldn't be opened simultaneously in the same goroutine.
+This can cause a deadlock as the read-write transaction needs to periodically
+re-map the data file but it cannot do so while a read-only transaction is open.
+
 
 #### Read-write transactions
 
@@ -251,7 +256,7 @@ db.View(func(tx *bolt.Tx) error {
 ```
 
 The `Get()` function does not return an error because its operation is
-guarenteed to work (unless there is some kind of system failure). If the key
+guaranteed to work (unless there is some kind of system failure). If the key
 exists then it will return its byte slice value. If it doesn't exist then it
 will return `nil`. It's important to note that you can have a zero-length value
 set to a key which is different than the key not existing.
@@ -262,6 +267,50 @@ Please note that values returned from `Get()` are only valid while the
 transaction is open. If you need to use a value outside of the transaction
 then you must use `copy()` to copy it to another byte slice.
 
+
+### Autoincrementing integer for the bucket
+By using the NextSequence() function, you can let Bolt determine a sequence
+which can be used as the unique identifier for your key/value pairs. See the
+example below.
+
+```go
+// CreateUser saves u to the store. The new user ID is set on u once the data is persisted.
+func (s *Store) CreateUser(u *User) error {
+    return s.db.Update(func(tx *bolt.Tx) error {
+        // Retrieve the users bucket.
+        // This should be created when the DB is first opened.
+        b := tx.Bucket([]byte("users"))
+
+        // Generate ID for the user.
+        // This returns an error only if the Tx is closed or not writeable.
+        // That can't happen in an Update() call so I ignore the error check.
+        id, _ = b.NextSequence()
+        u.ID = int(id)
+
+        // Marshal user data into bytes.
+        buf, err := json.Marshal(u)
+        if err != nil {
+            return err
+        }
+
+        // Persist bytes to users bucket.
+        return b.Put(itob(u.ID), buf)
+    })
+}
+
+// itob returns an 8-byte big endian representation of v.
+func itob(v int) []byte {
+    b := make([]byte, 8)
+    binary.BigEndian.PutUint64(b, uint64(v))
+    return b
+}
+
+type User struct {
+    ID int
+    ...
+}
+
+```
 
 ### Iterating over keys
 
@@ -446,6 +495,21 @@ It's also useful to pipe these stats to a service such as statsd for monitoring
 or to provide an HTTP endpoint that will perform a fixed-length sample.
 
 
+### Read-Only Mode
+
+Sometimes it is useful to create a shared, read-only Bolt database. To this,
+set the `Options.ReadOnly` flag when opening your database. Read-only mode
+uses a shared lock to allow multiple processes to read from the database but
+it will block any processes from opening the database in read-write mode.
+
+```go
+db, err := bolt.Open("my.db", 0666, &bolt.Options{ReadOnly: true})
+if err != nil {
+	log.Fatal(err)
+}
+```
+
+
 ## Resources
 
 For more information on getting started with Bolt, check out the following articles:
@@ -548,7 +612,14 @@ Here are a few things to note when evaluating and using Bolt:
   can in memory and will release memory as needed to other processes. This means
   that Bolt can show very high memory usage when working with large databases.
   However, this is expected and the OS will release memory as needed. Bolt can
-  handle databases much larger than the available physical RAM.
+  handle databases much larger than the available physical RAM, provided its
+  memory-map fits in the process virtual address space. It may be problematic
+  on 32-bits systems.
+
+* The data structures in the Bolt database are memory mapped so the data file
+  will be endian specific. This means that you cannot copy a Bolt file from a
+  little endian machine to a big endian machine and have it work. For most 
+  users this is not a concern since most modern CPUs are little endian.
 
 * Because of the way pages are laid out on disk, Bolt cannot truncate data files
   and return free pages back to the disk. Instead, Bolt maintains a free list
@@ -562,12 +633,62 @@ Here are a few things to note when evaluating and using Bolt:
 [page-allocation]: https://github.com/boltdb/bolt/issues/308#issuecomment-74811638
 
 
+## Reading the Source
+
+Bolt is a relatively small code base (<3KLOC) for an embedded, serializable,
+transactional key/value database so it can be a good starting point for people
+interested in how databases work.
+
+The best places to start are the main entry points into Bolt:
+
+- `Open()` - Initializes the reference to the database. It's responsible for
+  creating the database if it doesn't exist, obtaining an exclusive lock on the
+  file, reading the meta pages, & memory-mapping the file.
+
+- `DB.Begin()` - Starts a read-only or read-write transaction depending on the
+  value of the `writable` argument. This requires briefly obtaining the "meta"
+  lock to keep track of open transactions. Only one read-write transaction can
+  exist at a time so the "rwlock" is acquired during the life of a read-write
+  transaction.
+
+- `Bucket.Put()` - Writes a key/value pair into a bucket. After validating the
+  arguments, a cursor is used to traverse the B+tree to the page and position
+  where they key & value will be written. Once the position is found, the bucket
+  materializes the underlying page and the page's parent pages into memory as
+  "nodes". These nodes are where mutations occur during read-write transactions.
+  These changes get flushed to disk during commit.
+
+- `Bucket.Get()` - Retrieves a key/value pair from a bucket. This uses a cursor
+  to move to the page & position of a key/value pair. During a read-only
+  transaction, the key and value data is returned as a direct reference to the
+  underlying mmap file so there's no allocation overhead. For read-write
+  transactions, this data may reference the mmap file or one of the in-memory
+  node values.
+
+- `Cursor` - This object is simply for traversing the B+tree of on-disk pages
+  or in-memory nodes. It can seek to a specific key, move to the first or last
+  value, or it can move forward or backward. The cursor handles the movement up
+  and down the B+tree transparently to the end user.
+
+- `Tx.Commit()` - Converts the in-memory dirty nodes and the list of free pages
+  into pages to be written to disk. Writing to disk then occurs in two phases.
+  First, the dirty pages are written to disk and an `fsync()` occurs. Second, a
+  new meta page with an incremented transaction ID is written and another
+  `fsync()` occurs. This two phase write ensures that partially written data
+  pages are ignored in the event of a crash since the meta page pointing to them
+  is never written. Partially written meta pages are invalidated because they
+  are written with a checksum.
+
+If you have additional notes that could be helpful for others, please submit
+them via pull request.
+
+
 ## Other Projects Using Bolt
 
 Below is a list of public, open source projects that use Bolt:
 
 * [Operation Go: A Routine Mission](http://gocode.io) - An online programming game for Golang using Bolt for user accounts and a leaderboard.
-* [Bazil](https://github.com/bazillion/bazil) - A file system that lets your data reside where it is most convenient for it to reside.
+* [Bazil](https://bazil.org/) - A file system that lets your data reside where it is most convenient for it to reside.
 * [DVID](https://github.com/janelia-flyem/dvid) - Added Bolt as optional storage engine and testing it against Basho-tuned leveldb.
 * [Skybox Analytics](https://github.com/skybox/skybox) - A standalone funnel analysis tool for web analytics.
 * [Scuttlebutt](https://github.com/benbjohnson/scuttlebutt) - Uses Bolt to store and process all Twitter mentions of GitHub projects.
@@ -586,5 +707,15 @@ Below is a list of public, open source projects that use Bolt:
 * [tentacool](https://github.com/optiflows/tentacool) - REST api server to manage system stuff (IP, DNS, Gateway...) on a linux server.
 * [SkyDB](https://github.com/skydb/sky) - Behavioral analytics database.
 * [Seaweed File System](https://github.com/chrislusf/weed-fs) - Highly scalable distributed key~file system with O(1) disk read.
+* [InfluxDB](http://influxdb.com) - Scalable datastore for metrics, events, and real-time analytics.
+* [Freehold](http://tshannon.bitbucket.org/freehold/) - An open, secure, and lightweight platform for your files and data.
+* [Prometheus Annotation Server](https://github.com/oliver006/prom_annotation_server) - Annotation server for PromDash & Prometheus service monitoring system.
+* [Consul](https://github.com/hashicorp/consul) - Consul is service discovery and configuration made easy. Distributed, highly available, and datacenter-aware.
+* [Kala](https://github.com/ajvb/kala) - Kala is a modern job scheduler optimized to run on a single node. It is persistent, JSON over HTTP API, ISO 8601 duration notation, and dependent jobs.
+* [drive](https://github.com/odeke-em/drive) - drive is an unofficial Google Drive command line client for \*NIX operating systems.
+* [stow](https://github.com/djherbis/stow) -  a persistence manager for objects
+  backed by boltdb.
+* [buckets](https://github.com/joyrexus/buckets) - a bolt wrapper streamlining
+  simple tx and key scans.
 
 If you are using Bolt in a project please send a pull request to add it to the list.
