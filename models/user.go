@@ -55,10 +55,12 @@ type UserRequest struct {
 	Password string `json:"password"`
 }
 
+// FieldMap implements binding.FieldMap
 func (u *UserRequest) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{}
 }
 
+// Validate validates a request payload to create a new user.
 func (u *UserRequest) Validate(req *http.Request, errs binding.Errors) binding.Errors {
 	if u.Email == "" {
 		errs = append(errs, binding.Error{
@@ -81,10 +83,12 @@ type UserTokenRequest struct {
 	Password string `json:"password"`
 }
 
+// FieldMap implements binding.FieldMap
 func (u *UserTokenRequest) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{}
 }
 
+// Validate validates a request payload to generate a token for a user.
 func (u *UserTokenRequest) Validate(req *http.Request, errs binding.Errors) binding.Errors {
 	if u.Email == "" {
 		errs = append(errs, binding.Error{
@@ -106,10 +110,12 @@ type UserUpdateRequest struct {
 	Password string `json:"password"`
 }
 
+// FieldMap implements binding.FieldMap
 func (u *UserUpdateRequest) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{}
 }
 
+// Validate validates a request payload to update a user.
 func (u *UserUpdateRequest) Validate(req *http.Request, errs binding.Errors) binding.Errors {
 	if u.Password == "" {
 		errs = append(errs, binding.Error{

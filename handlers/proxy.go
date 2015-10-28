@@ -19,6 +19,7 @@ func hostname(host string) string {
 	return parts[0]
 }
 
+// ProxyDNS returns a handler for a proxy DNS server.
 func ProxyDNS(server *app.App) func(w dns.ResponseWriter, req *dns.Msg) {
 	return func(w dns.ResponseWriter, req *dns.Msg) {
 		if len(req.Question) == 0 {
@@ -45,11 +46,15 @@ func ProxyDNS(server *app.App) func(w dns.ResponseWriter, req *dns.Msg) {
 			dns.HandleFailed(w, req)
 			return
 		}
-		w.WriteMsg(resp)
+		if err := w.WriteMsg(resp); err != nil {
+			dns.HandleFailed(w, req)
+			return
+		}
 	}
 }
 
-func Proxy(server *app.App, isHttps bool) func(w http.ResponseWriter, req *http.Request) {
+// Proxy returns a handler to proxy HTTP(S) requests.
+func Proxy(server *app.App, isHTTPS bool) func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		record, err := models.FindRecordByFQDN(server.DB, hostname(req.Host))
 		if err != nil || record.ID == "" {
@@ -66,7 +71,7 @@ func Proxy(server *app.App, isHttps bool) func(w http.ResponseWriter, req *http.
 			return
 		}
 		proxy := httputil.NewSingleHostReverseProxy(u)
-		if isHttps {
+		if isHTTPS {
 			proxy.Transport = &http.Transport{
 				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 			}

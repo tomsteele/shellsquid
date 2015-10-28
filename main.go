@@ -30,13 +30,13 @@ func main() {
 
 	db, err := boltons.Open(conf.BoltDBFile, 0600, nil)
 	if err != nil {
-		log.Fatal("Error opening db: %s", err.Error())
+		log.Fatalf("Error opening db: %s", err.Error())
 	}
 	defer db.Close()
 
 	keys, err := db.Keys(models.User{})
 	if err != nil {
-		log.Fatal("Error getting keys from db: %s", err.Error())
+		log.Fatalf("Error getting keys from db: %s", err.Error())
 	}
 	if len(keys) == 0 {
 		log.Println("No users found creating admin@localhost user with random password")

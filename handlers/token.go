@@ -11,6 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// UserToken returns an HTTP handler to generate a token for a user.
 func UserToken(server *app.App) func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		userTokenReq := &models.UserTokenRequest{}
