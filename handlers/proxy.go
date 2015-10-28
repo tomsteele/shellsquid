@@ -26,7 +26,7 @@ func ProxyDNS(server *app.App) func(w dns.ResponseWriter, req *dns.Msg) {
 			return
 		}
 		name := req.Question[0].Name
-		record, err := models.FindRecordByFQDN(server.DB, name)
+		record, err := models.FindRecordBySubOfFQDN(server.DB, name)
 		if err != nil || record.ID == "" {
 			dns.HandleFailed(w, req)
 			return

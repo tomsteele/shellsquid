@@ -54,6 +54,21 @@ func FindRecordByFQDN(db *boltons.DB, fqdn string) (*Record, error) {
 	return &record, nil
 }
 
+// FindRecordBySubOfFQDN
+func FindRecordBySubOfFQDN(db *boltons.DB, name string) (*Record, error) {
+	record := Record{}
+	records := []Record{}
+	if err := db.All(&records); err != nil {
+		return &record, err
+	}
+	for _, r := range records {
+		if ok, err := regexp.Match(".+\\."+name, []byte(r.FQDN)); ok && err != nil {
+			return &r, nil
+		}
+	}
+	return &record, nil
+}
+
 // RecordRequest is used for JSON binding during a request to create a new record.
 type RecordRequest struct {
 	FQDN            string `json:"fqdn"`
