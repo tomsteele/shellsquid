@@ -5,7 +5,7 @@ At its core, shellsquid is a database driven HTTP(S) and DNS reverse proxy. The 
 
 For HTTP(S), a common way of configuring payload routing is to register a single domain with a wildcard DNS record, and then use subdomains to route payloads.
 
-For DNS payloads, a domain can be registered and a authoritative DNS server setup. You can then use multiple subdomains to route to different internal handlers. [dnscat2](https://github.com/iagox86/dnscat2) was the payload used for testing, consult it's documentation for more information on configuring authoritative DNS.
+For DNS payloads, a domain can be registered and a authoritative DNS server setup, using the shellsquid host IP. You can then use multiple subdomains to route to different internal handlers. [dnscat2](https://github.com/iagox86/dnscat2) was the payload used for testing, consult it's documentation for more information on configuring authoritative DNS.
 
 ### Download
 Binary packages for every supported operating system are availble [here](https://github.com/tomsteele/shellsquid/releases/latest).
